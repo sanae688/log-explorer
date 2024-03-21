@@ -1,0 +1,4 @@
+docker/db/mysql_data
+src/vendor
+src/.vscode
+src/lib/database/page_analytics
