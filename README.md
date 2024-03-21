@@ -2,9 +2,7 @@
 
 ## 環境構築
 
-*ターミナル上で下記コマンドを実行*
-
-1. 基本
+### 1. 基本
 
 ```bash
 # Docker イメージのビルド
@@ -17,41 +15,40 @@ docker-compose up -d
 docker-compose down
 ```
 
-2. DB初期設定
+### 2. DB初期設定
 
 ```bash
 # DB 初期設定
 docker compose exec app php lib/database/InitialData.php
 ```
 
-3. データのインポート
+### 3. データのインポート
 
-*※必ず「2.DB初期設定」が完了してから下記実施すること*
+**※必ず「2.DB初期設定」が完了してから下記実施すること**
 
-* Wikipediaのアクセスログのデータを下記URLからダウンロード
-[Index of /other/pageviews/2024/2024-03/](https://dumps.wikimedia.org/other/pageviews/2024/2024-03/)
+* Wikipediaのアクセスログのデータを[Index of /other/pageviews/2024/2024-03/](https://dumps.wikimedia.org/other/pageviews/2024/2024-03/)からどれかひとつ選んでダウンロード
 
 * ダウンロードしたファイルはsrc/lib/database配下に解凍した状態で追加
 
 * ファイル名は`page_analytics`に変更
 
 ```bash
-# Dockerのdbコンテナにrootユーザーでログイン(コマンド実行後、パスワードを聞かれたら`pass`を入力)
+# Dockerのdbコンテナにrootユーザーでログイン(コマンド実行後、パスワードを聞かれたらpassを入力)
 docker compose exec db mysql -p
 
 # local_infileをONに設定
 mysql> SET GLOBAL local_infile=ON;
 
-# ユーザー権限をSUPERに設定(コマンド実行後、`Ctrl＋D`でDockerのdbコンテナから退出)
+# ユーザー権限をSUPERに設定(コマンド実行後、Ctrl＋DでDockerのdbコンテナから退出)
 mysql> GRANT SUPER ON *.* To test_user@'%';
 
-# データのインポート(コマンド実行後、パスワードを聞かれたら`pass`を入力)
+# データのインポート(コマンド実行後、パスワードを聞かれたらpassを入力)
 docker compose exec app mysqlimport -h db -u test_user -p -d --fields-terminated-by=' ' --local test_database lib/database/page_analytics
 ```
 
 ## ログ解析システム使用方法
 
-*※必ず「環境構築」が完了してから下記実施すること*
+**※必ず「環境構築」が完了してから下記実施すること**
 
 ```bash
 # ログ解析システム実行(実行後はコマンドに従って進めるのみ)
