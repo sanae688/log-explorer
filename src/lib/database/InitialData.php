@@ -30,8 +30,8 @@ class InitialData
     public function InitialData(): void
     {
         try {
-            $this->InitialDeleteTable();
-            $this->InitialCreateTable();
+            $this->initialDeleteTable();
+            $this->initialCreateTable();
             $this->dbh = null;
             echo '************データベース初期設定終了************' . PHP_EOL;
         } catch (PDOException $e) {
@@ -42,7 +42,7 @@ class InitialData
     /**
      * テーブル作成
      */
-    public function InitialCreateTable(): void
+    public function initialCreateTable(): void
     {
         $sql = <<<EOI
         CREATE TABLE page_analytics(
@@ -67,7 +67,7 @@ class InitialData
     /**
      * テーブル削除
      */
-    public function InitialDeleteTable(): void
+    public function initialDeleteTable(): void
     {
         $sql = 'DROP TABLE IF EXISTS page_analytics';
 
