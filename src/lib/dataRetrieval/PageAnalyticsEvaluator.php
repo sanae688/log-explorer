@@ -15,9 +15,6 @@ use database\DbConnect;
  */
 class PageAnalyticsEvaluator
 {
-    /* @var PDO データーベース接続情報 */
-    protected $dbh;
-
     /**
      * コンストラクタ
      *
@@ -25,8 +22,6 @@ class PageAnalyticsEvaluator
      */
     public function __construct(private IPageAnalyticsView $pageAnalyticsView)
     {
-        $dbConnect = new DbConnect();
-        $this->dbh = $dbConnect->dbConnect();
     }
 
     /**
@@ -37,6 +32,11 @@ class PageAnalyticsEvaluator
      */
     public function findPageAnalyticsView(string $inputValue): array
     {
-        return $this->pageAnalyticsView->findPageAnalyticsView($this->dbh, $inputValue);
+        $dbConnect = new DbConnect();
+        $dbh = $dbConnect->dbConnect();
+        $result = $this->pageAnalyticsView->findPageAnalyticsView($dbh, $inputValue);
+        $dbh = null;
+
+        return $result;
     }
 }

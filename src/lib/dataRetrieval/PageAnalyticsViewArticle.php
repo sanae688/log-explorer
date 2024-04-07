@@ -5,7 +5,6 @@ namespace DataRetrieval;
 require_once(__DIR__ . '/IPageAnalyticsView.php');
 
 use PDO;
-use PDOException;
 
 /**
  * ビュー解析クラス（記事数指定）
@@ -24,8 +23,7 @@ class PageAnalyticsViewArticle implements IPageAnalyticsView
      */
     public function findPageAnalyticsView(PDO $dbh, string $inputValue): array
     {
-        try {
-            $sql = <<<EOI
+        $sql = <<<EOI
             SELECT
                 domain_code
                 , page_title
@@ -38,16 +36,11 @@ class PageAnalyticsViewArticle implements IPageAnalyticsView
                 ?;
             EOI;
 
-            $prepare = $dbh->prepare($sql);
-            $prepare->bindParam(1, $inputValue, PDO::PARAM_INT);
-            $prepare->execute();
-            $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
-            $prepare = null;
-            $dbh = null;
+        $prepare = $dbh->prepare($sql);
+        $prepare->bindParam(1, $inputValue, PDO::PARAM_INT);
+        $prepare->execute();
+        $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
 
-            return $result;
-        } catch (PDOException $e) {
-            exit('【ビュー解析エラー（記事数指定）】' . PHP_EOL . $e->getMessage() . PHP_EOL);
-        }
+        return $result;
     }
 }

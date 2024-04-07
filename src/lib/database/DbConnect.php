@@ -3,7 +3,6 @@
 namespace Database;
 
 use PDO;
-use PDOException;
 
 /**
  * データーベース接続クラス
@@ -27,12 +26,7 @@ class DbConnect
      */
     public function dbConnect(): PDO
     {
-        try {
-            $dbh = new PDO($_ENV['MYSQL_DNS'], $_ENV['MYSQL_USER'], $_ENV['MYSQL_PASSWORD'], self::PDO_OPTIONS);
-            echo 'DB接続完了' . PHP_EOL;
-            return $dbh;
-        } catch (PDOException $e) {
-            exit('【DB接続エラー】' . PHP_EOL . $e->getMessage() . PHP_EOL);
-        }
+        $dbh = new PDO($_ENV['MYSQL_DNS'], $_ENV['MYSQL_USER'], $_ENV['MYSQL_PASSWORD'], self::PDO_OPTIONS);
+        return $dbh;
     }
 }

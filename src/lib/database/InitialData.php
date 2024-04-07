@@ -15,13 +15,11 @@ use PDOException;
 class InitialData
 {
     /* @var PDO データーベース接続情報 */
-    protected $dbh;
+    private $dbh;
 
     public function __construct()
     {
         echo '************データベース初期設定開始************' . PHP_EOL;
-        $dbConnect = new DbConnect();
-        $this->dbh = $dbConnect->dbConnect();
     }
 
     /**
@@ -30,19 +28,22 @@ class InitialData
     public function InitialData(): void
     {
         try {
+            $dbConnect = new DbConnect();
+            $this->dbh = $dbConnect->dbConnect();
             $this->initialDeleteTable();
             $this->initialCreateTable();
-            $this->dbh = null;
-            echo '************データベース初期設定終了************' . PHP_EOL;
         } catch (PDOException $e) {
             exit('【データベース初期設定エラー】' . PHP_EOL . $e->getMessage() . PHP_EOL);
+        } finally {
+            $this->dbh = null;
+            echo '************データベース初期設定終了************' . PHP_EOL;
         }
     }
 
     /**
      * テーブル作成
      */
-    public function initialCreateTable(): void
+    private function initialCreateTable(): void
     {
         $sql = <<<EOI
         CREATE TABLE page_analytics(
@@ -67,7 +68,7 @@ class InitialData
     /**
      * テーブル削除
      */
-    public function initialDeleteTable(): void
+    private function initialDeleteTable(): void
     {
         $sql = 'DROP TABLE IF EXISTS page_analytics';
 

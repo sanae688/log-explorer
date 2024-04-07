@@ -5,7 +5,6 @@ namespace DataRetrieval;
 require_once(__DIR__ . '/IPageAnalyticsView.php');
 
 use PDO;
-use PDOException;
 
 /**
  * ビュー解析クラス（ドメインコード指定）
@@ -24,14 +23,13 @@ class PageAnalyticsViewDomainCode implements IPageAnalyticsView
      */
     public function findPageAnalyticsView(PDO $dbh, string $inputValue): array
     {
-        try {
-            $param = explode(" ", $inputValue);
-            $placeHolders = implode(',', array_fill(0, count($param), '?'));
+        $param = explode(" ", $inputValue);
+        $placeHolders = implode(',', array_fill(0, count($param), '?'));
 
-            $sql = <<<EOI
+        $sql = <<<EOI
             SELECT
                 domain_code
-                , SUM(count_views)
+                , SUM(count_views) AS sum_count_views
             FROM
                 page_analytics
             WHERE
@@ -39,18 +37,13 @@ class PageAnalyticsViewDomainCode implements IPageAnalyticsView
             GROUP BY
                 domain_code
             ORDER BY
-                SUM(count_views) DESC;
+                sum_count_views DESC;
             EOI;
 
-            $prepare = $dbh->prepare($sql);
-            $prepare->execute($param);
-            $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
-            $prepare = null;
-            $dbh = null;
+        $prepare = $dbh->prepare($sql);
+        $prepare->execute($param);
+        $result = $prepare->fetchAll(PDO::FETCH_ASSOC);
 
-            return $result;
-        } catch (PDOException $e) {
-            exit('【ビュー解析エラー（ドメインコード指定）】' . PHP_EOL . $e->getMessage() . PHP_EOL);
-        }
+        return $result;
     }
 }
