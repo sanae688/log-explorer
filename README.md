@@ -54,6 +54,12 @@ docker compose exec app mysqlimport -h db -u test_user -p -d --fields-terminated
 # ログ解析システム実行(実行後はコマンドに従って進めるのみ)
 docker compose exec app php lib/pageAnalytics/Analyzer.php
 ```
+**実行例：**
+* **記事数指定の場合**(指定した記事数分だけビュー数が多い順にソートし、**ドメインコード,ページタイトル,ビュー数**を提示する)
+![image](https://github.com/sanae688/log-explorer/assets/73834075/3cefdbe9-524d-4745-ba10-f5c7f43f849d)
+
+* **ドメインコード指定の場合**(指定したドメインコードに対して人気順にソートし、**ドメインコード,合計ビュー数**を提示する)
+![image](https://github.com/sanae688/log-explorer/assets/73834075/742eee66-0687-4fa6-8dbd-d91b4578b16c)
 
 ## 目的
 
@@ -73,6 +79,8 @@ docker compose exec app php lib/pageAnalytics/Analyzer.php
         │   ├── PageAnalyticsEvaluator.php
         │   ├── PageAnalyticsViewArticle.php
         │   └── PageAnalyticsViewDomainCode.php
+        ├── enum
+        │   └── AnalysisMode.php
         └── pageAnalytics
             └── Analyzer.php
 ```
